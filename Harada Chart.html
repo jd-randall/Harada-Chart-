@@ -1,0 +1,345 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Survive and Thrive Till May</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a 3x3 Harada sheet on graph paper. Goal circle in the center block,
+   eight area blocks around it, each a mini 3x3 with name + next step in the middle
+   and skills in the ring. Every area carries its own hue (--h). */
+:root{
+  --paper:#f2f4f1; --grid:rgba(40,60,90,.06); --ink:#18233a; --muted:#5d6779;
+  --line:rgba(24,35,58,.14); --cell:#ffffff; --action:#e8a317; --action-ink:#3a2700;
+  --tint-l:95%; --tint-c:.035; --hue-l:46%; --hue-c:.11;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body:"Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#11151e; --grid:rgba(160,180,220,.05); --ink:#e6eaf2; --muted:#98a1b3;
+  --line:rgba(230,234,242,.13); --cell:#1a202c; --action:#f0b53a; --action-ink:#2a1c00;
+  --tint-l:24%; --tint-c:.04; --hue-l:78%; --hue-c:.1; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#11151e; --grid:rgba(160,180,220,.05); --ink:#e6eaf2; --muted:#98a1b3;
+  --line:rgba(230,234,242,.13); --cell:#1a202c; --action:#f0b53a; --action-ink:#2a1c00;
+  --tint-l:24%; --tint-c:.04; --hue-l:78%; --hue-c:.1; color-scheme:dark}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.4;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 56px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,3.4vw,38px);line-height:1.05;margin:4px 0 0;text-wrap:balance}
+.status{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+.status.warn{color:#c2410c}
+.hint{color:var(--muted);font-size:13px;max-width:62ch;margin:0}
+
+/* macro sheet */
+.sheet{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.block{--h:250;border-radius:14px;background:oklch(var(--tint-l) var(--tint-c) var(--h));
+  border:1px solid var(--line);padding:8px;display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) minmax(0,1fr);gap:6px;
+  transition:box-shadow .3s}
+.block.flash{box-shadow:0 0 0 3px oklch(var(--hue-l) var(--hue-c) var(--h))}
+.cell{background:var(--cell);border:1px solid var(--line);border-radius:8px;padding:7px 8px;min-height:66px;
+  font-size:12.5px;line-height:1.3;display:flex;align-items:center;min-width:0}
+.cell .ed{width:100%;overflow-wrap:anywhere}
+.cell.empty{background:transparent;border-style:dashed}
+.namecell{background:var(--cell);border:1.5px solid oklch(var(--hue-l) var(--hue-c) var(--h));border-radius:10px;
+  padding:9px 10px;display:flex;flex-direction:column;justify-content:center;gap:6px;min-width:0}
+.namecell .name{font-family:var(--display);font-weight:700;font-size:16px;line-height:1.1;color:oklch(var(--hue-l) var(--hue-c) var(--h))}
+.next{background:color-mix(in oklab,var(--action) 18%,var(--cell));border:1.5px solid var(--action);border-radius:10px;padding:7px 8px;display:flex;flex-direction:column;gap:5px;min-width:0;min-height:96px}
+.next .row{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:auto}
+.chip{font:inherit;font-family:var(--mono);font-size:10px;letter-spacing:.03em;border:1px solid var(--line);background:var(--cell);color:var(--ink);
+  border-radius:999px;padding:2px 7px;cursor:pointer;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip.add{color:var(--muted);border-style:dashed}
+.chip.soon{border-color:var(--action);background:color-mix(in oklab,var(--action) 22%,var(--cell))}
+.chip.late{border-color:#c2410c;color:#c2410c}
+span.chip{cursor:default}
+.dled{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.dled select,.dled input,.due input{font:inherit;font-size:11px;color:var(--ink);background:var(--cell);border:1px solid var(--line);border-radius:5px;padding:2px 4px;max-width:100%}
+.due{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:4px}
+.chip:focus-visible,.dled select:focus-visible,.dled input:focus-visible,.due input:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.next .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:6px;align-items:center}
+.next .ed{font-size:13px;font-weight:600}
+.donebtn{font:inherit;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--action);background:var(--action);color:var(--action-ink);border-radius:999px;padding:2px 7px;cursor:pointer}
+.donebtn:hover{filter:brightness(1.06)}
+.count{font-family:var(--mono);font-size:10px;color:var(--muted)}
+
+/* center block */
+.center{--h:250;background:transparent;border:none;place-items:center}
+.center .lab{font-family:var(--display);font-weight:700;font-size:12.5px;line-height:1.15;text-align:center;
+  padding:6px;border-radius:8px;cursor:pointer;color:oklch(var(--hue-l) var(--hue-c) var(--h));
+  background:oklch(var(--tint-l) var(--tint-c) var(--h));border:1px solid var(--line);width:100%;min-height:52px;display:flex;align-items:center;justify-content:center}
+.center .lab:hover,.center .lab:focus-visible{outline:2px solid oklch(var(--hue-l) var(--hue-c) var(--h));outline-offset:1px}
+.goal{grid-row:2;grid-column:2;aspect-ratio:1;width:100%;max-width:190px;border-radius:50%;
+  background:var(--ink);color:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:14px;gap:6px;box-shadow:0 0 0 6px var(--paper),0 0 0 7px var(--line)}
+.goal .ed{font-family:var(--display);font-weight:800;font-size:clamp(15px,1.6vw,19px);line-height:1.08;text-wrap:balance}
+.goal .days{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.75;display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center}
+.goal input[type=date]{font:inherit;font-size:10px;background:transparent;color:inherit;border:1px solid currentColor;border-radius:4px;padding:1px 3px;opacity:.85;color-scheme:dark}
+
+/* editable */
+.ed{outline:none;border-radius:4px;cursor:text;min-height:1.2em}
+.ed:focus{box-shadow:0 0 0 2px oklch(var(--hue-l) var(--hue-c) var(--h) / .55);background:var(--cell);color:var(--ink)}
+.goal .ed:focus{background:transparent;color:inherit;box-shadow:0 0 0 2px var(--action)}
+.ed:empty::before{content:attr(data-ph);color:var(--muted);font-weight:400;font-style:italic;opacity:.8}
+.goal .ed:empty::before{color:inherit;opacity:.6}
+
+/* log */
+.log{background:var(--cell);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.log h2{font-family:var(--display);font-size:18px;margin:0 0 4px}
+.log ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column}
+.log li{display:grid;grid-template-columns:62px 130px minmax(0,1fr) auto;gap:10px;align-items:baseline;padding:7px 0;border-top:1px solid var(--line);font-size:13.5px}
+.log .d{font-family:var(--mono);font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.log .a{--h:250;font-weight:600;color:oklch(var(--hue-l) var(--hue-c) var(--h));font-size:12.5px}
+.log .x{border:none;background:none;color:var(--muted);cursor:pointer;font-size:15px;padding:0 4px;border-radius:4px}
+.log .x:hover{color:var(--ink)}
+.log .x:focus-visible,.donebtn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.log .none{color:var(--muted);font-size:13px;margin:6px 0 0}
+
+@media (max-width:900px){
+  .sheet{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .center{grid-column:1 / -1;order:-1;max-width:460px;justify-self:center;width:100%}
+}
+@media (max-width:620px){
+  .sheet{grid-template-columns:minmax(0,1fr)}
+  .log li{grid-template-columns:54px minmax(0,1fr) auto}
+  .log li .a{grid-column:2}
+  .log li .t{grid-column:2}
+  .log li .x{grid-column:3;grid-row:1}
+}
+@media (prefers-reduced-motion:reduce){.block{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Harada chart · 8 areas · 64 skills</div>
+      <h1 id="title">Survive and thrive till May</h1>
+    </div>
+    <div class="status" id="status" role="status">Loading your chart…</div>
+  </header>
+  <p class="hint">Click any box to edit it. The gold box under each area name is its most important next step, with an optional due date. Press <b>Done</b> when you finish it and it moves to the log below so you can write the next one. Click an area's countdown to change its deadline.</p>
+  <main class="sheet" id="sheet" aria-label="Harada chart"></main>
+  <section class="log" aria-labelledby="logh">
+    <h2 id="logh">Completed steps</h2>
+    <div class="hint">Every next step you mark done, newest first.</div>
+    <ul id="log"></ul>
+  </section>
+</div>
+
+<script id="seed" type="application/json">{"goal":"Survive and thrive till May","deadline":"2027-05-15","areas":[{"deadline":"2027-01-02","done":[],"id":"a0","name":"House flip","next":"","nextDue":"","skills":["","","","","","","",""]},{"deadline":"goal","done":[],"id":"a1","name":"School","next":"","nextDue":"","skills":["","","","","","","",""]},{"deadline":"","done":[],"id":"a2","name":"Job search/networking","next":"","nextDue":"","skills":["","","","","","","",""]},{"deadline":"","done":[],"id":"a3","name":"Spiritual/self","next":"","nextDue":"","skills":["","","","","","","",""]},{"deadline":"goal","done":[],"id":"a4","name":"REIT portfolio practicum","next":"","nextDue":"","skills":["Independent Valuation of REITs","Evaluation of REITs","Self Storage Industry Knowledge","","","","",""]},{"deadline":"goal","done":[],"id":"a5","name":"Sim fund","next":"","nextDue":"","skills":["Vibe Coding","Fundamental Analysis","Understand completed code & structure","","","","",""]},{"deadline":"2027-01-02","done":[],"id":"a6","name":"Wedding","next":"","nextDue":"","skills":["Luncheon","Ring Ceremony","Reception","Invites","","Groomsmen Plans (Bachelor party & assingments)","Budget","Temple & Ecclesiastical Details"]},{"deadline":"goal","done":[],"id":"a7","name":"Self-storage brokerage","next":"","nextDue":"","skills":["","","","","","","",""]}]}</script>
+<script>
+(function(){
+  const RING=[0,1,2,5,8,7,6,3];             // 3x3 cell index for ring slot i, clockwise from top-left
+  const HUES=[28,255,155,300,205,75,340,120];  // one hue per area
+  // area block is 3 cols x 4 rows: name at (2,2), next step directly beneath at (3,2),
+  // eight skills ring clockwise around them (side cells span two rows)
+  const SKILL_SLOTS=[[1,1],[1,2],[1,3],["2 / span 2",3],[4,3],[4,2],[4,1],["2 / span 2",1]];
+  const DOC="harada/chart";
+  const LS="harada-chart-local-v2";
+  let SEED=null; try{SEED=JSON.parse(document.getElementById("seed").textContent)}catch(e){}
+  const blank=()=>({goal:"",deadline:"2027-05-15",areas:Array.from({length:8},(_,i)=>({id:"a"+i,name:"",next:"",nextDue:"",deadline:"",skills:Array(8).fill(""),done:[]}))});
+
+  let state=null, ref=null, mode="loading", dirty=false, saveTimer=null, chain=Promise.resolve(), pendingRemote=null;
+  const openDl=new Set();
+  const isDate=s=>/^\d{4}-\d{2}-\d{2}$/.test(s||"");
+  const areaDate=a=>a.deadline==="goal"?state.deadline:(isDate(a.deadline)?a.deadline:"");
+  function daysTo(ds){const d=new Date(ds+"T00:00:00");if(isNaN(d))return null;const t=new Date();t.setHours(0,0,0,0);return Math.round((d-t)/86400000)}
+  function countText(n){return n>1?n+" days left":n===1?"1 day left":n===0?"Today":(-n)+(n===-1?" day":" days")+" overdue"}
+  const tone=n=>n<0?"late":n<=7?"soon":"";
+  const fmtDate=ds=>new Date(ds+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric"});
+  function pos(el,r,c){el.style.gridRow=r;el.style.gridColumn=c}
+  const $=s=>document.querySelector(s);
+  const statusEl=$("#status");
+  const setStatus=(t,warn)=>{statusEl.textContent=t;statusEl.classList.toggle("warn",!!warn)};
+
+  function normalize(d){
+    const b=blank(); if(!d||typeof d!=="object") return b;
+    b.goal=typeof d.goal==="string"?d.goal:""; if(typeof d.deadline==="string") b.deadline=d.deadline;
+    (Array.isArray(d.areas)?d.areas:[]).slice(0,8).forEach((a,i)=>{
+      const t=b.areas[i]; if(!a) return;
+      t.id=a.id||t.id; t.name=String(a.name||""); t.next=String(a.next||"");
+      t.nextDue=isDate(a.nextDue)?a.nextDue:""; t.deadline=(a.deadline==="goal"||isDate(a.deadline))?a.deadline:"";
+      (Array.isArray(a.skills)?a.skills:[]).slice(0,8).forEach((s,j)=>t.skills[j]=String(s||""));
+      t.done=Array.isArray(a.done)?a.done.filter(x=>x&&x.text).map(x=>({text:String(x.text),at:String(x.at||"")})):[];
+    });
+    return b;
+  }
+
+  function place(el,idx){el.style.gridRow=Math.floor(idx/3)+1;el.style.gridColumn=idx%3+1}
+
+  function editable(tag,cls,value,ph,onChange){
+    const el=document.createElement(tag); el.className="ed "+(cls||"");
+    el.setAttribute("contenteditable","plaintext-only"); el.setAttribute("role","textbox");
+    el.setAttribute("aria-label",ph); el.dataset.ph=ph; el.spellcheck=true; el.textContent=value;
+    el.addEventListener("input",()=>{onChange(el.textContent.replace(/\n+/g," ").trim()); queueSave()});
+    el.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();el.blur()} if(e.key==="Escape") el.blur()});
+    el.addEventListener("paste",e=>{e.preventDefault();const t=(e.clipboardData||window.clipboardData).getData("text");document.execCommand("insertText",false,t.replace(/\s+/g," "))});
+    el.addEventListener("blur",()=>{if(!el.textContent.trim()) el.textContent=""; flushSave(); if(pendingRemote&&!dirty){const p=pendingRemote;pendingRemote=null;state=p;render()}});
+    if(mode==="readonly") el.setAttribute("contenteditable","false");
+    return el;
+  }
+
+  function daysLeft(){
+    const d=new Date(state.deadline+"T00:00:00"); if(isNaN(d)) return null;
+    return Math.max(0,Math.ceil((d-new Date())/86400000));
+  }
+
+  function render(){
+    const sheet=$("#sheet"); sheet.textContent="";
+    const center=document.createElement("section"); center.className="block center"; center.setAttribute("aria-label","Goal");
+    // goal circle
+    const goal=document.createElement("div"); goal.className="goal"; place(goal,4);
+    goal.appendChild(editable("div","",state.goal,"Your main goal",v=>{state.goal=v;$("#title").textContent=v||"Harada chart"}));
+    const dl=document.createElement("div"); dl.className="days";
+    const n=daysLeft(); const sp=document.createElement("span");
+    sp.textContent=n==null?"Set a date":(n+" days · "+Math.ceil(n/7)+" wks to");
+    const di=document.createElement("input"); di.type="date"; di.id="deadline"; di.value=state.deadline; di.setAttribute("aria-label","Goal date");
+    di.addEventListener("change",()=>{state.deadline=di.value;queueSave();flushSave();render()});
+    dl.append(sp,di); goal.appendChild(dl); center.appendChild(goal);
+    $("#title").textContent=state.goal||"Harada chart";
+
+    state.areas.forEach((a,i)=>{
+      const h=HUES[i];
+      // label around the goal
+      const lab=document.createElement("button"); lab.className="lab"; lab.style.setProperty("--h",h); place(lab,RING[i]);
+      lab.textContent=a.name||"Area "+(i+1); lab.type="button";
+      lab.addEventListener("click",()=>{const b=document.getElementById("area-"+i);b.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"});b.classList.add("flash");setTimeout(()=>b.classList.remove("flash"),1400)});
+      center.appendChild(lab);
+    });
+
+    // area blocks placed around center in the same ring order
+    const blocks=[];
+    state.areas.forEach((a,i)=>{
+      const h=HUES[i];
+      const b=document.createElement("section"); b.className="block"; b.id="area-"+i; b.style.setProperty("--h",h);
+      b.setAttribute("aria-label",a.name||"Area "+(i+1));
+      const ro=mode==="readonly";
+      // name cell + area deadline countdown
+      const nm=document.createElement("div"); nm.className="namecell"; pos(nm,2,2);
+      nm.appendChild(editable("div","name",a.name,"Area name",v=>{a.name=v; const l=center.querySelectorAll(".lab")[i]; if(l) l.textContent=v||"Area "+(i+1)}));
+      const ad=areaDate(a); const n0=ad?daysTo(ad):null;
+      const chip=document.createElement("button"); chip.type="button";
+      chip.className="chip"+(ad?" "+tone(n0):" add"); chip.id="dlchip-"+i;
+      chip.textContent=ad?countText(n0)+" · "+fmtDate(ad):"+ Deadline";
+      chip.setAttribute("aria-expanded",openDl.has(i)?"true":"false");
+      chip.disabled=ro&&!ad;
+      chip.addEventListener("click",()=>{if(ro)return; openDl.has(i)?openDl.delete(i):openDl.add(i); render(); const c=document.getElementById("dlchip-"+i); if(c) c.focus()});
+      const crow=document.createElement("div"); crow.appendChild(chip); nm.appendChild(crow);
+      if(openDl.has(i)&&!ro){
+        const ed=document.createElement("div"); ed.className="dled";
+        const sel=document.createElement("select"); sel.id="dlsel-"+i; sel.setAttribute("aria-label","Deadline for "+(a.name||"this area"));
+        [["none","No deadline"],["goal","Graduation"],["custom","Pick a date"]].forEach(([v,t])=>{const o=document.createElement("option");o.value=v;o.textContent=t;sel.appendChild(o)});
+        sel.value=a.deadline==="goal"?"goal":isDate(a.deadline)?"custom":"none";
+        ed.appendChild(sel);
+        if(sel.value==="custom"){
+          const di2=document.createElement("input"); di2.type="date"; di2.id="dldate-"+i; di2.value=a.deadline; di2.setAttribute("aria-label","Deadline date");
+          di2.addEventListener("change",()=>{if(isDate(di2.value)){a.deadline=di2.value;queueSave();flushSave();render()}});
+          ed.appendChild(di2);
+        }
+        sel.addEventListener("change",()=>{
+          a.deadline=sel.value==="none"?"":sel.value==="goal"?"goal":(isDate(a.deadline)?a.deadline:new Date().toISOString().slice(0,10));
+          queueSave();flushSave();render();
+        });
+        nm.appendChild(ed);
+      }
+      b.appendChild(nm);
+      // most important next step, directly beneath the name
+      const nx=document.createElement("div"); nx.className="next"; pos(nx,3,2);
+      const lbl=document.createElement("div"); lbl.className="lbl";
+      const ls=document.createElement("span"); ls.textContent="Most important next step"; lbl.appendChild(ls);
+      if(a.done.length){const c=document.createElement("span");c.className="count";c.textContent=a.done.length+" done";lbl.appendChild(c)}
+      nx.appendChild(lbl);
+      const nxEd=editable("div","",a.next,"Write the one next step",v=>{a.next=v; btn.hidden=!v||mode==="readonly"});
+      nx.appendChild(nxEd);
+      const row=document.createElement("div"); row.className="row";
+      const due=document.createElement("label"); due.className="due"; due.textContent="Due";
+      const dui=document.createElement("input"); dui.type="date"; dui.id="due-"+i; dui.value=a.nextDue; dui.disabled=ro;
+      dui.setAttribute("aria-label","Due date for next step");
+      dui.addEventListener("change",()=>{a.nextDue=isDate(dui.value)?dui.value:"";queueSave();flushSave();render()});
+      due.appendChild(dui); row.appendChild(due);
+      if(a.nextDue){const nd=daysTo(a.nextDue);const sc=document.createElement("span");sc.className="chip "+tone(nd);sc.textContent=countText(nd);row.appendChild(sc)}
+      const btn=document.createElement("button"); btn.type="button"; btn.className="donebtn"; btn.textContent="✓ Done";
+      btn.setAttribute("aria-label","Mark next step done for "+(a.name||"this area"));
+      btn.hidden=!a.next||mode==="readonly";
+      btn.addEventListener("mousedown",e=>e.preventDefault());
+      btn.addEventListener("click",()=>{
+        if(!a.next) return; a.done.unshift({text:a.next,at:new Date().toISOString()}); a.next=""; a.nextDue="";
+        queueSave(); flushSave(); render();
+        const f=document.querySelector("#area-"+i+" .next .ed"); if(f) f.focus();
+      });
+      row.appendChild(btn); nx.appendChild(row); b.appendChild(nx);
+      a.skills.forEach((s,j)=>{
+        const c=document.createElement("div"); c.className="cell"+(s?"":" empty"); pos(c,SKILL_SLOTS[j][0],SKILL_SLOTS[j][1]);
+        c.appendChild(editable("div","",s,"+ skill",v=>{a.skills[j]=v;c.classList.toggle("empty",!v)}));
+        c.addEventListener("click",e=>{if(e.target===c) c.firstChild.focus()});
+        b.appendChild(c);
+      });
+      blocks.push(b);
+    });
+    // assemble in 3x3 sheet order: ring slot i lives at RING[i]
+    const order=Array(9); order[4]=center; RING.forEach((idx,i)=>order[idx]=blocks[i]);
+    order.forEach(el=>sheet.appendChild(el));
+    renderLog();
+  }
+
+  function renderLog(){
+    const ul=$("#log"); ul.textContent="";
+    const items=[]; state.areas.forEach((a,i)=>a.done.forEach((d,k)=>items.push({i,k,a,d})));
+    items.sort((x,y)=>(y.d.at||"").localeCompare(x.d.at||""));
+    if(!items.length){const p=document.createElement("p");p.className="none";p.textContent="Nothing marked done yet.";ul.appendChild(p);return}
+    items.forEach(({i,k,a,d})=>{
+      const li=document.createElement("li");
+      const dt=document.createElement("span"); dt.className="d"; const t=new Date(d.at);
+      dt.textContent=isNaN(t)?"—":t.toLocaleDateString(undefined,{month:"short",day:"numeric"});
+      const an=document.createElement("span"); an.className="a"; an.style.setProperty("--h",HUES[i]); an.textContent=a.name||"Area "+(i+1);
+      const tx=document.createElement("span"); tx.className="t"; tx.textContent=d.text;
+      const x=document.createElement("button"); x.type="button"; x.className="x"; x.textContent="×"; x.setAttribute("aria-label","Remove from log");
+      x.hidden=mode==="readonly";
+      x.addEventListener("click",()=>{a.done.splice(k,1);queueSave();flushSave();render()});
+      li.append(dt,an,tx,x); ul.appendChild(li);
+    });
+  }
+
+  function queueSave(){dirty=true; if(mode==="readonly") return; setStatus("Editing…"); clearTimeout(saveTimer); saveTimer=setTimeout(flushSave,800)}
+  function flushSave(){
+    clearTimeout(saveTimer); if(!dirty||mode==="readonly"||mode==="loading") return;
+    const snap=JSON.parse(JSON.stringify(state));
+    if(mode==="local"){try{localStorage.setItem(LS,JSON.stringify(snap))}catch(e){} dirty=false; setStatus("Saved in this browser only",true); return}
+    setStatus("Saving…");
+    chain=chain.then(()=>ref.set(snap)).then(()=>{dirty=false;setStatus("Saved")}).catch(e=>{
+      if(e&&e.code==="invalid_argument"){mode="readonly";dirty=false;setStatus("View only — you can't edit this chart",true);render()}
+      else setStatus("Not saved — check your connection",true);
+    });
+  }
+
+  function useLocal(){
+    mode="local"; let d=null; try{d=JSON.parse(localStorage.getItem(LS)||"null")}catch(e){}
+    state=normalize(d||SEED); render(); setStatus("Saved in this browser only",true);
+  }
+
+  state=blank(); render();
+  (async()=>{
+    const db=window.claude&&window.claude.use?await window.claude.use("db").catch(()=>null):null;
+    if(!db){useLocal();return}
+    ref=db.doc(DOC);
+    const timer=setTimeout(()=>{if(mode==="loading") setStatus("Can't reach your saved chart yet…",true)},10000);
+    ref.onSnapshot(snap=>{
+      const next=normalize(snap.exists?snap.data():null);
+      if(!snap.metadata.fromCache){clearTimeout(timer)}
+      if(mode==="loading"){mode="live";state=next;render();setStatus(snap.exists?"Saved":"Empty chart — start typing");return}
+      if(dirty||snap.metadata.hasPendingWrites) return;
+      const a=document.activeElement; if(a&&a.classList&&a.classList.contains("ed")){pendingRemote=next;return}
+      state=next; render();
+    },err=>{clearTimeout(timer); if(mode==="loading") useLocal(); else setStatus("Lost connection to saved chart",true)});
+  })();
+  window.addEventListener("beforeunload",flushSave);
+})();
+</script>
+</body></html>
